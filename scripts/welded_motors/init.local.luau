@@ -3,6 +3,8 @@
 -- Welded Motors Plugin Stub
 -- Place this script in a .rbxm plugin file
 
+local ui_module = require(script.ui)
+
 local toolbar = plugin:CreateToolbar("Welded Motors")
 local button = toolbar:CreateButton("Open", "Open Welded Motors Widget", "")
 
@@ -23,3 +25,14 @@ widget.Title = "Welded Motors"
 button.Click:Connect(function()
 	widget.Enabled = not widget.Enabled
 end)
+
+local toggelWidgetAction = plugin:CreatePluginAction("ToggleWidgetActionId"
+	, "Toggle Welded Motors"
+	, "Toggle Wedled Mototrs widget"
+)
+
+local function toggleWidget()
+	widget.Enabled = not widget.Enabled
+end
+
+local ui = ui_module.createUi(widget)
