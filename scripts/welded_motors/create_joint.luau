@@ -12,7 +12,18 @@ type create_joint_step = types.step & {
 	selection_ui_ids: { types.ui_id };
 }
 
-local function create_selected_item_common_args(instance: Instance, args: { types.step_ui_item })
+local function create_selected_item_common_args(instance: Instance, add_tab: boolean, args: { types.step_ui_item })
+	-- tab
+	if add_tab then
+		local tab_args: types.tab_args = {
+			tab_width = 16;
+		}
+		local step_ui_item: types.step_ui_item = {
+			type = "tab";
+			args = tab_args;
+		}
+		table.insert(args, step_ui_item)
+	end
 	-- icon
 	do
 		local icon_args: types.class_icon_args = {
@@ -72,7 +83,7 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 			end
 
 			local args = {}
-			create_selected_item_common_args(selected, args)
+			create_selected_item_common_args(selected, true, args)
 			local id = context:show_ui(self, nil, unpack(args))
 			table.insert(self.selection_ui_ids, id)
 		end
@@ -100,7 +111,7 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 
 		for _, selected in selected_base_parts do
 			local args = {}
-			create_selected_item_common_args(selected, args)
+			create_selected_item_common_args(selected, true, args)
 
 			-- create weld button
 			if not welds_disabled then
@@ -164,10 +175,10 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 			-- add parent info
 			do
 				assert(selected.Parent)
-				create_selected_item_common_args(selected.Parent, args)
+				create_selected_item_common_args(selected.Parent, true, args)
 			end
 
-			create_selected_item_common_args(selected, args)
+			create_selected_item_common_args(selected, false, args)
 
 			-- create weld button
 			if not motor6d_disabled then

@@ -98,6 +98,12 @@ local function create_ui_element(item: types.step_ui_item, connections: { RBXScr
 
 		return image
 
+	elseif item.type == "tab" then
+		local args = item.args :: types.tab_args
+		local width = args.tab_width
+		local tab = script.Parent.tab_template:Clone()
+		tab.Size = UDim2.fromOffset(width, 1)
+		return tab
 	else
 		assert(false, "unknown type[" .. tostring(item.type) .. "]")
 	end
