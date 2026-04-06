@@ -186,19 +186,22 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 					label = "Create Motor6d here";
 					click_handler = function()
 						if debug_log then print("create motor6d selected_base_parts", #selected_base_parts) end
-						local selected = selected :: BasePart
+						local selected = selected :: Attachment
 						local recording = ChangeHistoryService:TryBeginRecording("Create Motor6d " .. tostring(#selected_base_parts) .. " parts")
 						assert(recording)
-						for _, selected_base_part in selected_base_parts do
-							local selected_base_part = selected_base_part :: BasePart
-							if selected_base_part == selected then continue end
+						for _, selected_attachment in selected_attachments do
+							local selected_attachment = selected_attachment :: Attachment
+							if selected_attachment == selected then continue end
 
-							local weld = Instance.new("Weld")
-							weld.Part0 = selected
-							weld.Part1 = selected_base_part
-							weld.C1 = CFrame.new(selected.Position - selected_base_part.Position)
-							weld.Name = selected_base_part.Name
-							weld.Parent = selected
+							local motor6d = Instance.new("Motor6D")
+							assert(selected.Parent)
+							motor6d.Part0 = selected.Parent :: BasePart
+							motor6d.C0 = CFrame.new(selected.Position)
+							motor6d.Part1 = selected_attachment.Parent :: BasePart
+							motor6d.C1 = CFrame.new(selected_attachment.Position)
+							assert(selected_attachment.Parent)
+							motor6d.Name = selected_attachment.Parent.Name
+							motor6d.Parent = selected.Parent
 						end
 						ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
 					end,
