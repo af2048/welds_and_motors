@@ -119,7 +119,8 @@ local function show_ui(self: types.step_context, step: types.step, id: types.ui_
 	for i, ui_item in ui_items do
 		if debug_log then print("show_ui", i, "ui_item.type", `[{ui_item.type}]`) end
 		self.step_connections[step] = self.step_connections[step] or {}
-		local item = create_ui_element(ui_item, self.step_connections[step])
+		local item = create_ui_element(ui_item, self.step_connections[step]);
+		(item :: GuiObject).LayoutOrder = i
 		item.Parent = frame
 	end
 
