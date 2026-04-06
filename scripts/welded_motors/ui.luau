@@ -2,6 +2,8 @@
 
 local debug_log = true
 
+local StudioService = game:GetService("StudioService")
+
 local types = require(script.Parent.steps_types)
 local steps_factory = require(script.Parent.steps_factory)
 
@@ -82,6 +84,19 @@ local function create_ui_element(item: types.step_ui_item, connections: { RBXScr
 		local text_label = script.Parent.text_label_template:Clone()
 		text_label.Text = args.label
 		return text_label
+
+	elseif item.type == "class_icon" then
+		local args = item.args :: types.class_icon_args
+		local image_data = StudioService:GetClassIcon(args.class_name)
+		local image = script.Parent.image_template:Clone()
+
+		for k, v in image_data do
+			(image::any)[k] = v
+		end
+
+		image.Size = UDim2.fromOffset(image.ImageRectSize.X, image.ImageRectSize.Y)
+
+		return image
 
 	else
 		assert(false, "unknown type[" .. tostring(item.type) .. "]")
