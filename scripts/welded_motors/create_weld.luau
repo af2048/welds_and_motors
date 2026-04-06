@@ -1,6 +1,7 @@
 --!strict
 
 local Selection = game:GetService("Selection")
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
 
 local types = require(script.Parent.steps_types)
 local utils = require(script.Parent.utils)
@@ -63,7 +64,21 @@ local function show_selection_ui(self: create_weld_step, context: types.step_con
 			local button_args: types.text_button_args = {
 				label = "weld here";
 				click_handler = function()
+					local selected = selected :: BasePart
+					local recording = ChangeHistoryService:TryBeginRecording("Weld " .. tostring(#selected_base_parts) .. " parts")
+					assert(recording)
+					for _, selected_base_part in selected_base_parts do
+						local selected_base_part = selected_base_part :: BasePart
+						if selected_base_part == selected then continue end
 
+						local weld = Instance.new("Weld")
+						weld.Part0 = selected
+						weld.Part1 = selected_base_part
+						weld.C1 = CFrame.new(selected.Position - selected_base_part.Position)
+						weld.Name = selected_base_part.Name
+						weld.Parent = selected
+					end
+					ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
 				end,
 			}
 			local step_ui_item: types.step_ui_item = {
