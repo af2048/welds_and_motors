@@ -13,8 +13,8 @@ type ui_impl = ui & types.step_context & {
 	widget: DockWidgetPluginGui;
 
 	next_ui_id: number;
-	uis: { [number]: Frame };
-	connections: { RBXScriptConnection };
+	step_connections: { [types.step]: { RBXScriptConnection } };
+	step_ui: { [types.step]: { [number]: Frame } };
 
 	content_frame: Frame?;
 
@@ -86,14 +86,16 @@ local function switch_to_next_step(self: types.step_context, step: types.step)
 	local self = self :: ui_impl
 end
 
-local function show_ui(self: types.step_context, id: types.ui_id?, ...): types.ui_id
+local function show_ui(self: types.step_context, step: types.step, id: types.ui_id?, ...): types.ui_id
 	local self = self :: ui_impl
 
 	local result_id = id
 
+	if debug_log then print("show_ui, step", `[{step.name}]`, "id", id) end
+
 	local frame: Frame?
 	if id then
-		frame = self.uis[id]
+		frame = self.step_ui[step][id]
 		assert(frame, "not found frame with id" .. tostring(id))
 		for _, child in frame:GetChildren() do
 			child:Destroy()
@@ -102,14 +104,20 @@ local function show_ui(self: types.step_context, id: types.ui_id?, ...): types.u
 		frame = script.Parent.ui_template:Clone()
 		assert(self.content_frame)
 		frame.Parent = self.content_frame
-		self.uis[self.next_ui_id] = frame
+		self.step_ui[step] = self.step_ui[step] or {}
+		self.step_ui[step][self.next_ui_id] = frame
 		result_id = self.next_ui_id
 		self.next_ui_id += 1
 	end
 
 	local ui_items: { types.step_ui_item } = { ... }
-	for _, ui_item in ui_items do
-		local item = create_ui_element(ui_item, self.connections)
+
+	if debug_log then print("show_ui, step", `[{step.name}]`, "ui_items", #ui_items) end
+
+	for i, ui_item in ui_items do
+		if debug_log then print("show_ui", i, "ui_item.type", `[{ui_item.type}]`) end
+		self.step_connections[step] = self.step_connections[step] or {}
+		local item = create_ui_element(ui_item, self.step_connections[step])
 		item.Parent = frame
 	end
 
@@ -124,8 +132,8 @@ return {
 			widget = widget;
 
 			next_ui_id = 0;
-			uis = {};
-			connections = {};
+			step_connections = {};
+			step_ui = {};
 
 			switch_to_next_step = switch_to_next_step;
 			show_ui = show_ui;

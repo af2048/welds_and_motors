@@ -36,7 +36,7 @@ export type step_context = {
 	-- creates new line if id is nil
 	-- updates existing line if id is provided
 	-- returns id of newly created line
-	show_ui: (self: step_context, id: ui_id?, ...step_ui_item) -> ui_id;
+	show_ui: (self: step_context, step: step, id: ui_id?, ...step_ui_item) -> ui_id;
 }
 
 return {}

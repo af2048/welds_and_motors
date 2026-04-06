@@ -19,10 +19,10 @@ local function execute_show_create_button(self: types.step, context: types.step_
 			local args: types.text_label_args = {
 				label = "test clicked";
 			}
-			context:show_ui(id, { type = "label", args = args })
+			context:show_ui(self, id, { type = "label", args = args })
 		end,
 	}
-	id = context:show_ui(nil, { type = "button", args = args })
+	id = context:show_ui(self, nil, { type = "button", args = args })
 end
 
 local step_constructors: { () -> types.step } = {
