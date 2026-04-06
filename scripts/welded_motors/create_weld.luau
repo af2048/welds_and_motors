@@ -61,7 +61,7 @@ local function show_selection_ui(self: create_weld_step, context: types.step_con
 		-- create weld button
 		if this_is_a_base_part and not weld_disabled then
 			local button_args: types.text_button_args = {
-				label = "weld";
+				label = "weld here";
 				click_handler = function()
 
 				end,
