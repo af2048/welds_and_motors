@@ -180,7 +180,7 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 
 			create_selected_item_common_args(selected, false, args)
 
-			-- create weld button
+			-- create motor6d button
 			if not motor6d_disabled then
 				local button_args: types.text_button_args = {
 					label = "Create Motor6d here";
