@@ -128,8 +128,8 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 
 							local weld = Instance.new("Weld")
 							weld.Part0 = selected
+							weld.C0 = selected.CFrame:ToObjectSpace(selected_base_part.CFrame)
 							weld.Part1 = selected_base_part
-							weld.C1 = CFrame.new(selected.Position - selected_base_part.Position)
 							weld.Name = selected_base_part.Name
 							weld.Parent = selected
 						end
