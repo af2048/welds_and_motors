@@ -133,7 +133,10 @@ local function switch_to_next_step(self: types.step_context, step: types.step)
 end
 
 local function register_connection(self: types.step_context, step: types.step, connection: RBXScriptConnection)
+	local self = self :: ui_impl
 
+	self.step_connections[step] = self.step_connections[step] or {}
+	table.insert(self.step_connections[step], connection)
 end
 
 return {
