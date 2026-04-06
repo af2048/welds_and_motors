@@ -37,6 +37,7 @@ export type step_context = {
 	-- updates existing line if id is provided
 	-- returns id of newly created line
 	show_ui: (self: step_context, step: step, id: ui_id?, ...step_ui_item) -> ui_id;
+	register_connection: (self: step_context, step: step, connection: RBXScriptConnection) -> ();
 }
 
 return {}

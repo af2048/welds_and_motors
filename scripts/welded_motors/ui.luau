@@ -88,10 +88,6 @@ local function create_ui_element(item: types.step_ui_item, connections: { RBXScr
 	end
 end
 
-local function switch_to_next_step(self: types.step_context, step: types.step)
-	local self = self :: ui_impl
-end
-
 local function show_ui(self: types.step_context, step: types.step, id: types.ui_id?, ...): types.ui_id
 	local self = self :: ui_impl
 
@@ -131,6 +127,14 @@ local function show_ui(self: types.step_context, step: types.step, id: types.ui_
 	return result_id
 end
 
+local function switch_to_next_step(self: types.step_context, step: types.step)
+	local self = self :: ui_impl
+end
+
+local function register_connection(self: types.step_context, step: types.step, connection: RBXScriptConnection)
+
+end
+
 return {
 	createUi = function(widget: DockWidgetPluginGui): ui
 
@@ -143,6 +147,7 @@ return {
 
 			switch_to_next_step = switch_to_next_step;
 			show_ui = show_ui;
+			register_connection = register_connection;
 		}
 
 		create(instance)
