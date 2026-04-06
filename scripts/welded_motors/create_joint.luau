@@ -1,6 +1,6 @@
 --!strict
 
-local debug_log = true
+local debug_log = false
 
 local Selection = game:GetService("Selection")
 local ChangeHistoryService = game:GetService("ChangeHistoryService")

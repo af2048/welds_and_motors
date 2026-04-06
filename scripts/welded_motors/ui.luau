@@ -1,6 +1,6 @@
 --!strict
 
-local debug_log = true
+local debug_log = false
 
 local StudioService = game:GetService("StudioService")
 
