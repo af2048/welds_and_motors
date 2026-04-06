@@ -64,7 +64,7 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 		-- create weld button
 		if this_is_a_base_part and not weld_disabled then
 			local button_args: types.text_button_args = {
-				label = "weld here";
+				label = "Weld here";
 				click_handler = function()
 					if debug_log then print("create weld selected_base_parts", #selected_base_parts) end
 					local selected = selected :: BasePart
