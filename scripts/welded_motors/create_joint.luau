@@ -53,9 +53,9 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 	do
 		local selection_info
 		if 0 == #selection then
-			selection_info = "nothing is selected"
+			selection_info = "Nothing is selected"
 		else
-			selection_info = "selected instances: " .. tostring(#selection)
+			selection_info = "Selected instances: " .. tostring(#selection)
 		end
 		local args: types.text_label_args = {
 			label = selection_info
@@ -86,9 +86,9 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 		do
 			local weld_text
 			if welds_disabled then
-				weld_text = "select at least two base parts to create a weld, currently selected: " .. tostring(#selected_base_parts);
+				weld_text = "To create a weld select at least two base parts, currently selected: " .. tostring(#selected_base_parts);
 			else
-				weld_text = "weld " .. tostring(#selected_base_parts) .. " base parts:";
+				weld_text = "Weld " .. tostring(#selected_base_parts) .. " base parts:";
 			end
 
 			local args: types.text_label_args = {
@@ -146,9 +146,9 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 
 			local motor6d_text
 			if motor6d_disabled then
-				motor6d_text = "select two attachments to create a motor6d, currently selected: " .. tostring(#selected_attachments);
+				motor6d_text = "To create a motor6d select two attachments, currently selected: " .. tostring(#selected_attachments);
 			else
-				motor6d_text = "create motor5d:";
+				motor6d_text = "Create motor5d:";
 			end
 
 			local args: types.text_label_args = {
