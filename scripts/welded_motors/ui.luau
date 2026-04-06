@@ -151,10 +151,6 @@ local function remove_ui(self: types.step_context, step: types.step, id: types.u
 	self.step_ui[step][id] = nil
 end
 
-local function switch_to_next_step(self: types.step_context, step: types.step)
-	local self = self :: ui_impl
-end
-
 local function register_connection(self: types.step_context, step: types.step, connection: RBXScriptConnection)
 	local self = self :: ui_impl
 
@@ -172,7 +168,6 @@ return {
 			step_connections = {};
 			step_ui = {};
 
-			switch_to_next_step = switch_to_next_step;
 			show_ui = show_ui;
 			remove_ui = remove_ui;
 			register_connection = register_connection;

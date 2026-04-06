@@ -35,7 +35,6 @@ export type step_ui_item = {
 export type ui_id = any
 
 export type step_context = {
-	switch_to_next_step: (self: step_context, step: step) -> ();
 	-- shows line of ui
 	-- creates new line if id is nil
 	-- updates existing line if id is provided
