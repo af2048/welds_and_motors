@@ -10,7 +10,7 @@ export type step = {
 
 export type steps = { step }
 
-export type ui_type = "button" | "label"
+export type ui_type = "button" | "label" | "class_icon"
 
 export type text_button_args = {
 	label: string;
@@ -21,7 +21,11 @@ export type text_label_args = {
 	label: string;
 }
 
-export type ui_item_args = text_button_args | text_label_args
+export type class_icon_args = {
+	class_name: string;
+}
+
+export type ui_item_args = text_button_args | text_label_args | class_icon_args
 
 export type step_ui_item = {
 	type: ui_type;
