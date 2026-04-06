@@ -103,7 +103,7 @@ local function show_ui(self: types.step_context, step: types.step, id: types.ui_
 			child:Destroy()
 		end
 	else
-		frame = script.Parent.ui_template:Clone()
+		frame = script.Parent.frame_template:Clone()
 		assert(self.content_frame)
 		frame.Parent = self.content_frame
 		self.step_ui[step] = self.step_ui[step] or {}
