@@ -2,6 +2,9 @@
 
 -- Welds and Motors Plugin
 
+local RunService = game:GetService("RunService")
+if RunService:IsRunning() then return end
+
 local ui_module = require(script.ui)
 
 local toolbar = plugin:CreateToolbar("Welds and Motors")
