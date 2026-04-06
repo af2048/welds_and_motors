@@ -193,15 +193,21 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 							local selected_attachment = selected_attachment :: Attachment
 							if selected_attachment == selected then continue end
 
+							local selected_parent = selected.Parent :: BasePart
+							assert(selected_parent)
+							local part0_cframe = selected_parent.CFrame
+
 							local motor6d = Instance.new("Motor6D")
-							assert(selected.Parent)
-							motor6d.Part0 = selected.Parent :: BasePart
-							motor6d.C0 = CFrame.new(selected.Position)
+							motor6d.Part0 = selected_parent
+							motor6d.C0 = CFrame.new(selected.Position) * selected.WorldCFrame.Rotation:Inverse()
 							motor6d.Part1 = selected_attachment.Parent :: BasePart
-							motor6d.C1 = CFrame.new(selected_attachment.Position)
+							motor6d.C1 = CFrame.new(selected_attachment.Position) * selected_attachment.WorldCFrame.Rotation:Inverse()
+
 							assert(selected_attachment.Parent)
 							motor6d.Name = selected_attachment.Parent.Name
 							motor6d.Parent = selected.Parent
+
+							selected_parent.CFrame = part0_cframe
 						end
 						ChangeHistoryService:FinishRecording(recording, Enum.FinishRecordingOperation.Commit)
 					end,
