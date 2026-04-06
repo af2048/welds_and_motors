@@ -141,6 +141,9 @@ local function show_ui(self: types.step_context, step: types.step, id: types.ui_
 		frame = self.step_ui[step][id]
 		assert(frame, "not found frame with id" .. tostring(id))
 		for _, child in frame:GetChildren() do
+			-- keep UIListLayout from frame_template
+			if child:IsA("UIListLayout") then continue end
+
 			child:Destroy()
 		end
 	else
