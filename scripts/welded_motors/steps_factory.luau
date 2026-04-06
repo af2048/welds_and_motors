@@ -1,6 +1,6 @@
 --!strict
 
-local create_weld_steps = require(script.Parent.create_weld)
+local create_weld_steps = require(script.Parent.create_joint)
 local types = require(script.Parent.steps_types)
 
 local function createSteps(): { types.steps }

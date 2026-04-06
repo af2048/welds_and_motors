@@ -1,16 +1,18 @@
 --!strict
 
+local debug_log = true
+
 local Selection = game:GetService("Selection")
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 
 local types = require(script.Parent.steps_types)
 local utils = require(script.Parent.utils)
 
-type create_weld_step = types.step & {
+type create_joint_step = types.step & {
 	selection_ui_ids: { types.ui_id };
 }
 
-local function show_selection_ui(self: create_weld_step, context: types.step_context)
+local function show_selection_ui(self: create_joint_step, context: types.step_context)
 
 	for _, id in self.selection_ui_ids do
 		context:remove_ui(self, id)
@@ -64,6 +66,7 @@ local function show_selection_ui(self: create_weld_step, context: types.step_con
 			local button_args: types.text_button_args = {
 				label = "weld here";
 				click_handler = function()
+					if debug_log then print("create weld selected_base_parts", #selected_base_parts) end
 					local selected = selected :: BasePart
 					local recording = ChangeHistoryService:TryBeginRecording("Weld " .. tostring(#selected_base_parts) .. " parts")
 					assert(recording)
@@ -94,11 +97,12 @@ local function show_selection_ui(self: create_weld_step, context: types.step_con
 end
 
 local function execute_show_create_button(self: types.step, context: types.step_context)
-	local self = self :: create_weld_step
+	local self = self :: create_joint_step
 
 	local selection = Selection:Get()
 
 	local function on_selection_changed()
+		if debug_log then print("on_selection_changed") end
 		show_selection_ui(self, context)
 	end
 
@@ -110,8 +114,8 @@ end
 
 local step_constructors: { () -> types.step } = {
 	function(): types.step
-		local instance: create_weld_step = {
-			name = "show create button";
+		local instance: create_joint_step = {
+			name = "create joint";
 			execute = execute_show_create_button;
 
 			selection_ui_ids = {};
