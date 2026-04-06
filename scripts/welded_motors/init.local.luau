@@ -38,3 +38,9 @@ local function toggleWidget()
 end
 
 local ui = ui_module.createUi(widget)
+
+local Studio = settings().Studio
+Studio.ThemeChanged:Connect(function()
+	if not widget.Enabled then return end
+	ui:on_theme_changed()
+end)

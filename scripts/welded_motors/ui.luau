@@ -4,11 +4,13 @@ local debug_log = true
 
 local StudioService = game:GetService("StudioService")
 
+local Studio = settings().Studio
+
 local types = require(script.Parent.steps_types)
 local steps_factory = require(script.Parent.steps_factory)
 
 export type ui = {
-
+	on_theme_changed: (self: ui) -> ();
 }
 
 type ui_impl = ui & types.step_context & {
@@ -19,12 +21,17 @@ type ui_impl = ui & types.step_context & {
 	step_ui: { [types.step]: { [number]: Frame } };
 
 	content_frame: Frame?;
+	main_scrolling_frame: ScrollingFrame?;
 
 	all_steps: { types.steps }?;
 }
 
 local function init(self: ui_impl)
 	if debug_log then print("init") end
+
+	local theme = Studio.Theme :: StudioTheme
+	assert(self.main_scrolling_frame)
+	self.main_scrolling_frame.ScrollBarImageColor3 = theme:GetColor(Enum.StudioStyleGuideColor.ScriptText)
 
 	self.all_steps = steps_factory.createSteps();
 	assert(self.all_steps)
@@ -58,9 +65,14 @@ end
 local function create(self: ui_impl)
 	if debug_log then print("create") end
 
+	local theme = Studio.Theme :: StudioTheme
+
 	local main = script.Parent.main:Clone()
+	main.BackgroundColor3 = theme:GetColor(Enum.StudioStyleGuideColor.ScriptBackground)
 	main.Parent = self.widget
-	self.content_frame = main:FindFirstChild("mainScrollingFrame"):FindFirstChild("content")
+	self.main_scrolling_frame = main:FindFirstChild("mainScrollingFrame")
+	assert(self.main_scrolling_frame)
+	self.content_frame = self.main_scrolling_frame:FindFirstChild("content") :: Frame
 
 	self.widget:GetPropertyChangedSignal("Enabled"):Connect(function()
 		if self.widget.Enabled then
@@ -72,10 +84,16 @@ local function create(self: ui_impl)
 end
 
 local function create_ui_element(item: types.step_ui_item, connections: { RBXScriptConnection }): Instance
+
+	local theme = Studio.Theme :: StudioTheme
+
 	if item.type == "button" then
 		local args = item.args :: types.text_button_args
 		local button = script.Parent.text_button_template:Clone()
 		button.Text = args.label
+		button.BackgroundColor3 = theme:GetColor(Enum.StudioStyleGuideColor.ScriptBackground)
+		button.TextColor3 = theme:GetColor(Enum.StudioStyleGuideColor.ScriptText)
+		button.BorderColor3 = theme:GetColor(Enum.StudioStyleGuideColor.ScriptText)
 		table.insert(connections, button.Activated:Once(function() args.click_handler() end))
 		return button
 
@@ -83,6 +101,8 @@ local function create_ui_element(item: types.step_ui_item, connections: { RBXScr
 		local args = item.args :: types.text_label_args
 		local text_label = script.Parent.text_label_template:Clone()
 		text_label.Text = args.label
+		text_label.BackgroundColor3 = theme:GetColor(Enum.StudioStyleGuideColor.ScriptBackground)
+		text_label.TextColor3 = theme:GetColor(Enum.StudioStyleGuideColor.ScriptText)
 		return text_label
 
 	elseif item.type == "class_icon" then
@@ -164,6 +184,13 @@ local function register_connection(self: types.step_context, step: types.step, c
 	table.insert(self.step_connections[step], connection)
 end
 
+local function on_theme_changed(self: ui)
+	local self = self :: ui_impl
+
+	cleanup(self)
+	init(self)
+end
+
 return {
 	createUi = function(widget: DockWidgetPluginGui): ui
 
@@ -177,6 +204,8 @@ return {
 			show_ui = show_ui;
 			remove_ui = remove_ui;
 			register_connection = register_connection;
+
+			on_theme_changed = on_theme_changed;
 		}
 
 		create(instance)
