@@ -159,7 +159,7 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 			if motor6d_disabled then
 				motor6d_text = "To create a motor6d select two attachments, currently selected: " .. tostring(#selected_attachments);
 			else
-				motor6d_text = "Create motor5d:";
+				motor6d_text = "Create motor6d:";
 			end
 
 			local args: types.text_label_args = {
