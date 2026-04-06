@@ -23,26 +23,38 @@ local function show_selection_ui(self: create_weld_step, context: types.step_con
 
 	if #selected_base_parts < 2 then
 		local args: types.text_label_args = {
-			label = "select at least two base parts to create a weld, currently selected: " .. tostring(#selection);
+			label = "select at least two base parts to create a weld, currently selected: " .. tostring(#selected_base_parts);
 		}
 		local id = context:show_ui(self, nil, { type = "label", args = args })
 		table.insert(self.selection_ui_ids, id)
 	end
 
-	for i, selected in selection do
+	for _, selected in selection do
 		local args: { types.step_ui_item } = {}
 
 		-- icon
+		do
+			local icon_args: types.class_icon_args = {
+				class_name = selected.ClassName;
+			}
+			local step_ui_item: types.step_ui_item = {
+				type = "class_icon";
+				args = icon_args;
+			}
+			table.insert(args, step_ui_item)
+		end
 
 		-- name
-		local label_args: types.text_label_args = {
-			label = tostring(i) .. " " .. selected.Name
-		}
-		local step_ui_item: types.step_ui_item = {
-			type = "label";
-			args = label_args;
-		}
-		table.insert(args, step_ui_item)
+		do
+			local label_args: types.text_label_args = {
+				label = selected.Name
+			}
+			local step_ui_item: types.step_ui_item = {
+				type = "label";
+				args = label_args;
+			}
+			table.insert(args, step_ui_item)
+		end
 
 		local this_is_a_base_part = table.find(selected_base_parts, selected)
 
