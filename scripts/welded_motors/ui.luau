@@ -128,6 +128,14 @@ local function show_ui(self: types.step_context, step: types.step, id: types.ui_
 	return result_id
 end
 
+local function remove_ui(self: types.step_context, step: types.step, id: types.ui_id)
+	local self = self :: ui_impl
+
+	local frame = self.step_ui[step][id]
+	frame:Destroy()
+	self.step_ui[step][id] = nil
+end
+
 local function switch_to_next_step(self: types.step_context, step: types.step)
 	local self = self :: ui_impl
 end
@@ -151,6 +159,7 @@ return {
 
 			switch_to_next_step = switch_to_next_step;
 			show_ui = show_ui;
+			remove_ui = remove_ui;
 			register_connection = register_connection;
 		}
 
