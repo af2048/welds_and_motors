@@ -20,7 +20,7 @@ local function show_selection_ui(self: create_joint_step, context: types.step_co
 	self.selection_ui_ids = {}
 
 	local selection = Selection:Get()
-	local selected_base_parts = utils.get_base_parts(selection)
+	local selected_base_parts = utils.get_instances_of_type(selection, "BasePart")
 
 	local weld_disabled = #selected_base_parts < 2
 
