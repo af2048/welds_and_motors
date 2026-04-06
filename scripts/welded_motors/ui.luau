@@ -34,15 +34,21 @@ end
 local function cleanup(self: ui_impl)
 	if debug_log then print("cleanup") end
 
-	for _, c in self.connections do
-		c:Disconnect()
+	for step, connections in self.step_connections do
+		if debug_log then print("cleanup, step", `[{step.name}]`, "connections", #connections) end
+		for _, c in connections do
+			c:Disconnect()
+		end
 	end
-	self.connections = {}
+	self.step_connections = {}
 
-	for _, frame in self.uis do
-		frame:Destroy()
+	for step, frames in self.step_ui do
+		for id, frame in frames do
+			if debug_log then print("cleanup, step", `[{step.name}]`, "frame", id) end
+			frame:Destroy()
+		end
 	end
-	self.uis = {}
+	self.step_ui = {}
 
 	self.all_steps = {}
 end
