@@ -1,12 +1,11 @@
 --!strict
 
--- Welded Motors Plugin Stub
--- Place this script in a .rbxm plugin file
+-- Welds and Motors Plugin
 
 local ui_module = require(script.ui)
 
-local toolbar = plugin:CreateToolbar("Welded Motors")
-local button = toolbar:CreateButton("Open", "Open Welded Motors Widget", "")
+local toolbar = plugin:CreateToolbar("Welds and Motors")
+local button = toolbar:CreateButton("Open", "Open \"Welds and Motors\" Widget", "")
 
 local widgetInfo = DockWidgetPluginGuiInfo.new(
 	Enum.InitialDockState.Left,  -- Dock to the left by default
@@ -18,8 +17,8 @@ local widgetInfo = DockWidgetPluginGuiInfo.new(
 	100                          -- Minimum height
 )
 
-local widget = plugin:CreateDockWidgetPluginGuiAsync("WeldedMotorsWidget", widgetInfo)
-widget.Title = "Welded Motors"
+local widget = plugin:CreateDockWidgetPluginGuiAsync("WeldsAndMotorsWidget", widgetInfo)
+widget.Title = "Welds and Motors"
 
 -- Button toggles the widget
 button.Click:Connect(function()
@@ -27,8 +26,8 @@ button.Click:Connect(function()
 end)
 
 local toggelWidgetAction = plugin:CreatePluginAction("ToggleWidgetActionId"
-	, "Toggle Welded Motors"
-	, "Toggle Wedled Mototrs widget"
+	, "Toggle Welds and Motors"
+	, "Toggle \"Welds and Motors\" widget"
 )
 
 local function toggleWidget()
