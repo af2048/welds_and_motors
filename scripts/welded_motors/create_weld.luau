@@ -3,57 +3,82 @@
 local Selection = game:GetService("Selection")
 
 local types = require(script.Parent.steps_types)
+local utils = require(script.Parent.utils)
 
 type create_weld_step = types.step & {
-
+	selection_ui_ids: { types.ui_id };
 }
 
-local function execute_show_create_button(self: types.step, context: types.step_context)
-	local self = self :: create_weld_step
+local function show_selection_ui(self: create_weld_step, context: types.step_context)
+
+	for _, id in self.selection_ui_ids do
+		context:remove_ui(self, id)
+	end
+	self.selection_ui_ids = {}
 
 	local selection = Selection:Get()
+	local selected_base_parts = utils.get_base_parts(selection)
 
-	local id
+	local weld_disabled = #selected_base_parts < 2
 
-	local function show_selection()
-		local selection = Selection:Get()
-
+	if #selected_base_parts < 2 then
 		local args: types.text_label_args = {
-			label = "select two instances to create weld, currently selected: " .. tostring(#selection);
+			label = "select at least two base parts to create a weld, currently selected: " .. tostring(#selection);
 		}
-		id = context:show_ui(self, id, { type = "label", args = args })
+		local id = context:show_ui(self, nil, { type = "label", args = args })
+		table.insert(self.selection_ui_ids, id)
 	end
 
-	local function show_weld_buttons()
-		local selection = Selection:Get()
-		for i, selected in selection do
-			local label_args: types.text_label_args = {
-				label = tostring(i) .. " " .. selected.Name .. " " .. selected:GetFullName()
-			}
+	for i, selected in selection do
+		local args: { types.step_ui_item } = {}
+
+		-- icon
+
+		-- name
+		local label_args: types.text_label_args = {
+			label = tostring(i) .. " " .. selected.Name
+		}
+		local step_ui_item: types.step_ui_item = {
+			type = "label";
+			args = label_args;
+		}
+		table.insert(args, step_ui_item)
+
+		local this_is_a_base_part = table.find(selected_base_parts, selected)
+
+		-- create weld button
+		if this_is_a_base_part and not weld_disabled then
 			local button_args: types.text_button_args = {
 				label = "weld";
 				click_handler = function()
 
 				end,
 			}
-			context:show_ui(self, nil, { type = "label", args = label_args }, { type = "button", args = button_args })
+			local step_ui_item: types.step_ui_item = {
+				type = "button";
+				args = button_args;
+			}
+			table.insert(args, step_ui_item)
 		end
+
+		local id = context:show_ui(self, nil, unpack(args))
+		table.insert(self.selection_ui_ids, id)
+	end
+end
+
+local function execute_show_create_button(self: types.step, context: types.step_context)
+	local self = self :: create_weld_step
+
+	local selection = Selection:Get()
+
+	local function on_selection_changed()
+		show_selection_ui(self, context)
 	end
 
-	if 2 ~= #selection then
-		show_selection()
-		local selection_changed = Selection.SelectionChanged:Connect(function()
-			local selection = Selection:Get()
-			if 2 ~= #selection then
-				show_selection()
-			else
-				show_weld_buttons()
-			end
-		end)
-		context:register_connection(self, selection_changed)
-	else
-		show_weld_buttons()
-	end
+	local selection_changed = Selection.SelectionChanged:Connect(on_selection_changed)
+	context:register_connection(self, selection_changed)
+
+	on_selection_changed()
 end
 
 local step_constructors: { () -> types.step } = {
@@ -61,6 +86,8 @@ local step_constructors: { () -> types.step } = {
 		local instance: create_weld_step = {
 			name = "show create button";
 			execute = execute_show_create_button;
+
+			selection_ui_ids = {};
 		}
 		return instance
 	end,
